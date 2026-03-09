@@ -1,1 +1,6 @@
 backend/appsettings.HuggingFace.json
+bin/
+obj/
+appsettings.HuggingFace.json
+*.user
+*.suo
