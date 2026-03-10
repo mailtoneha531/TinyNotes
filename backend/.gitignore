@@ -21,6 +21,6 @@ appsettings.HuggingFace.json
 .DS_Store
 Thumbs.db
 
-appsettings.HuggingFace.json
+#appsettings.HuggingFace.json
 *.user
 *.suo
