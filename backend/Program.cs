@@ -44,12 +44,14 @@ builder.Services.AddOpenTelemetry()
 
 // Correct the logging configuration to use OpenTelemetry's logging instrumentation
 builder.Logging.ClearProviders();
+builder.Logging.AddConsole();
 builder.Logging.AddOpenTelemetry(options =>
 {
     options.IncludeScopes = true;
     options.ParseStateValues = true;
     options.IncludeFormattedMessage = true;
 });
+builder.Logging.SetMinimumLevel(LogLevel.Debug);
 
 var app = builder.Build();
 
