@@ -182,7 +182,7 @@ Resources:
     Properties:
       Cluster: !Ref TinyNotesCluster
       TaskDefinition: !Ref TinyNotesTaskDefinition
-      DesiredCount: 1
+      DesiredCount: 2
       LaunchType: FARGATE
       NetworkConfiguration:
         AwsvpcConfiguration:
@@ -192,6 +192,25 @@ Resources:
         - ContainerName: backend
           ContainerPort: 80
           TargetGroupArn: !Ref TinyNotesTargetGroup
+      DeploymentConfiguration:
+        DeploymentCircuitBreaker:
+          Enable: true
+          Rollback: true
+        MaximumPercent: 200
+        MinimumHealthyPercent: 50
+
+  TinyNotesServiceScalingPolicy:
+    Type: AWS::ApplicationAutoScaling::ScalingPolicy
+    Properties:
+      PolicyName: TinyNotesScalingPolicy
+      ServiceNamespace: ecs
+      ResourceId: !Sub "service/${TinyNotesCluster}/${TinyNotesService}"
+      ScalableDimension: ecs:service:DesiredCount
+      PolicyType: TargetTrackingScaling
+      TargetTrackingScalingPolicyConfiguration:
+        TargetValue: 50.0
+        PredefinedMetricSpecification:
+          PredefinedMetricType: ECSServiceAverageCPUUtilization
 
   TinyNotesDatabase:
     Type: AWS::RDS::DBInstance
@@ -204,6 +223,8 @@ Resources:
       VPCSecurityGroups:
         - !GetAtt TinyNotesDatabaseSecurityGroup.GroupId
       DBSubnetGroupName: !Ref TinyNotesDatabaseSubnetGroup
+      MultiAZ: true
+      StorageEncrypted: true
 
   TinyNotesDatabaseSecurityGroup:
     Type: AWS::EC2::SecurityGroup
@@ -232,6 +253,10 @@ Resources:
       WebsiteConfiguration:
         IndexDocument: index.html
         ErrorDocument: error.html
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault:
+              SSEAlgorithm: AES256
 
   TinyNotesFrontendBucketPolicy:
     Type: AWS::S3::BucketPolicy
