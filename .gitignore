@@ -4,3 +4,4 @@ obj/
 appsettings.HuggingFace.json
 *.user
 *.suo
+backend/appsettings.HuggingFace.json
