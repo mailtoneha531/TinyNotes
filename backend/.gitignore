@@ -1,0 +1,26 @@
+# Ignore build artifacts
+bin/
+obj/
+
+# Ignore sensitive configuration files
+appsettings.HuggingFace.json
+
+# Ignore user-specific files
+*.user
+*.suo
+*.swp
+*.tmp
+*.log
+
+# Ignore IDE-specific files
+.vscode/
+.idea/
+*.code-workspace
+
+# Ignore OS-specific files
+.DS_Store
+Thumbs.db
+
+appsettings.HuggingFace.json
+*.user
+*.suo
